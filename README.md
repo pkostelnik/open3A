@@ -1,1 +1,1 @@
-# open3A
+# open3A in a Container based on Docker
