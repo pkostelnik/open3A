@@ -16,9 +16,10 @@ RUN apt-get update \
     && rm -r /var/lib/apt/lists/* \
     && mkdir /tmp/open3A \
 ### open3a
-    && wget -q https://www.open3a.de/download/open3A 3.2.zip -O open3A.zip && mv open3A.zip /tmp/open3A \
+    && wget -q "https://www.open3a.de/download/open3A 3.2.zip" -O open3A.zip && mv open3A.zip /tmp/open3A \
 ### remove standard apache configuration & modules
-    && chmod +x           /usr/local/bin/docker-entrypoint
+    && chmod +x           /usr/local/bin/docker-entrypoint \
+    && unzip /tmp/open3A/open3A.zip
 
 HEALTHCHECK --start-period=20s --interval=45s --timeout=3s CMD wget http://localhost/ -O /dev/null || exit 1
 
