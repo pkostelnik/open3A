@@ -2,4 +2,4 @@
 Based on release 3.2 from:
 https://www.open3a.de/
 
-build on Ubuntu 20.04 container
+build on Ubuntu 20.04 container from:buildpack-deps:20.04-curl
