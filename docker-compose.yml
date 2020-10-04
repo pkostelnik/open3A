@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  app:
+    image: jd/php:7.2-fpm
+    build:
+      context: "./docker/php"
+      dockerfile: Dockerfile
+    volumes:
+      - "./src/:/var/www/html"
+    networks:
+      - app
+  web:
+    image: stefanprodan/caddy:latest
+    volumes:
+      - "./docker/caddy/Caddyfile:/etc/caddy/Caddyfile"
+      - "./src/:/var/www/html"
+    networks:
+      - app
+    ports:
+      - 8080:2015
+  db:
+    image: mariadb:latest
+    volumes:
+      - "./docker/db/data:/var/lib/mysql"
+      - "./docker/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+    networks:
+      - app
+    env_file:
+      - ./docker/db/.env
+    ports:
+      - 3306:3306
+  composer:
+    image: composer:latest
+    volumes:
+      - "./src/:/app"
+
+
+networks:
+  app:
