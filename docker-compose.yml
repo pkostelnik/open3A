@@ -19,7 +19,7 @@ services:
       - open3a
     ports:
       - 80:80
-      - 2019:2019
+#      - 2019:2019
   db:
     image: mariadb:latest
     restart: unless-stopped
