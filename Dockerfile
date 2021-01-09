@@ -10,7 +10,7 @@ RUN apk update \
     && apk upgrade \
     && apk add nano unzip aria2 \
     && mkdir -p /tmp \
-    && aria2c "https://www.open3a.de/download/open3A 3.2.zip" -d /tmp -o open3A.zip \
+    && aria2c "https://www.open3a.de/download/open3A 3.3.zip" -d /tmp -o open3A.zip \
     && unzip /tmp/open3A.zip -d /srv
 
 COPY Caddyfile /etc/caddy/Caddyfile
@@ -19,6 +19,6 @@ HEALTHCHECK --start-period=20s --interval=45s --timeout=3s CMD wget http://local
 
 EXPOSE 80
 EXPOSE 443
-EXPOSE 2019
+#EXPOSE 2019
 
 # ENTRYPOINT ["docker-entrypoint"]
