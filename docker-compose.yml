@@ -2,39 +2,27 @@ version: "3.7"
 
 services:
   app:
-    image: jd/php:7.2-fpm
-    build:
-      context: "./docker/php"
-      dockerfile: Dockerfile
-    volumes:
-      - "./src/:/var/www/html"
+    image: php:7-fpm
+#    volumes:
+    expose:
+      - 9000
     networks:
-      - app
+      - open3a
   web:
-    image: stefanprodan/caddy:latest
-    volumes:
-      - "./docker/caddy/Caddyfile:/etc/caddy/Caddyfile"
-      - "./src/:/var/www/html"
+    image: pkostelnik/open3a:latest
+#    volumes:
     networks:
-      - app
+      - open3a
     ports:
-      - 8080:2015
+      - 80:80
   db:
     image: mariadb:latest
-    volumes:
-      - "./docker/db/data:/var/lib/mysql"
-      - "./docker/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+#    volumes:
     networks:
-      - app
-    env_file:
-      - ./docker/db/.env
-    ports:
-      - 3306:3306
-  composer:
-    image: composer:latest
-    volumes:
-      - "./src/:/app"
-
+      - open3a
+#    env_file:
+    expose:
+      - 3306
 
 networks:
-  app:
+  open3a:
