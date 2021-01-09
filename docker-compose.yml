@@ -18,6 +18,11 @@ services:
   db:
     image: mariadb:latest
 #    volumes:
+    environment:
+      MYSQL_ROOT_PASSWORD: PhaggyK26
+      MYSQL_USER: open3a
+      MYSQL_PASSWORD: open3a
+      
     networks:
       - open3a
 #    env_file:
