@@ -3,13 +3,16 @@ version: "3.7"
 services:
   app:
     image: php:7-fpm
+    restart: unless-stopped
 #    volumes:
+    volumes_from: web
     expose:
       - 9000
     networks:
       - open3a
   web:
     image: pkostelnik/open3a:latest
+    restart: unless-stopped
 #    volumes:
     networks:
       - open3a
@@ -18,6 +21,7 @@ services:
       - 2019:2019
   db:
     image: mariadb:latest
+    restart: unless-stopped
 #    volumes:
     environment:
       MYSQL_ROOT_PASSWORD: PhaggyK26
