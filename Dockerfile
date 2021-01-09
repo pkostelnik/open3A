@@ -11,7 +11,7 @@ RUN apk update \
     && apk add nano unzip aria2 \
     && mkdir -p /tmp \
     && aria2c "https://www.open3a.de/download/open3A 3.2.zip" -d /tmp -o open3A.zip \
-    && unzip /tmp/open3A.zip -d /srv \
+    && unzip /tmp/open3A.zip -d /srv
 
 COPY Caddyfile /etc/caddy/Caddyfile
 
