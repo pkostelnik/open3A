@@ -19,5 +19,6 @@ HEALTHCHECK --start-period=20s --interval=45s --timeout=3s CMD wget http://local
 
 EXPOSE 80
 EXPOSE 443
+EXPOSE 2019
 
 # ENTRYPOINT ["docker-entrypoint"]
