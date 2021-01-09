@@ -74,3 +74,4 @@ EXPOSE 2019
 WORKDIR /srv
 
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+CMD ["php-fpm", "-D"]
