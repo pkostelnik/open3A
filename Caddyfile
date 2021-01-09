@@ -1,8 +1,5 @@
 :80
 
 root * /srv
-php_fastcgi localhost:9000 {
-root * /srv
-index index.php
-}
+php_fastcgi localhost:9000
 encode zstd gzip
