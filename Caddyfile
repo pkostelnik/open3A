@@ -1,7 +1,7 @@
 :80
 
 root * /srv
-php_fastcgi app:9000 {
+php_fastcgi localhost:9000 {
 root * /srv
 index index.php
 }
