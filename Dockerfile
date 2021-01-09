@@ -1,4 +1,5 @@
 FROM caddy:2.3.0
+# ARG TARGETPLATFORM
 
 LABEL MAINTAINER='Pawel Kostelnik <pkostelnik@snat.tech>'
 
@@ -17,5 +18,6 @@ COPY Caddyfile /etc/caddy/Caddyfile
 HEALTHCHECK --start-period=20s --interval=45s --timeout=3s CMD wget http://localhost/ -O /dev/null || exit 1
 
 EXPOSE 80
+EXPOSE 443
 
 # ENTRYPOINT ["docker-entrypoint"]
