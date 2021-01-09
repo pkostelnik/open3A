@@ -5,7 +5,8 @@ services:
     image: php:7-fpm
     restart: unless-stopped
 #    volumes:
-    volumes_from: web
+    volumes_from:
+      - web
     expose:
       - 9000
     networks:
