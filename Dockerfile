@@ -1,6 +1,6 @@
 FROM alpine:3.12
-LABEL Maintainer="Tim de Pater <code@trafex.nl>" \
-      Description="Lightweight container with Nginx 1.18 & PHP-FPM 7.3 based on Alpine Linux."
+LABEL Maintainer="Pawel Kostelnik <pkostelnik@snat.tech>" \
+      Description="Lightweight container with Nginx 1.18, PHP-FPM 7.3 and open3a 3.3 based on Alpine Linux."
 
 # Install packages and remove default server definition
 RUN apk --no-cache add php7 php7-fpm php7-opcache php7-mysqli php7-json php7-openssl php7-curl \
@@ -34,8 +34,11 @@ USER nobody
 WORKDIR /var/www/html
 #COPY --chown=nobody src/ /var/www/html/
 
+# Download the comporessed app
 RUN aria2c "https://www.open3a.de/download/open3A 3.3.zip" -d /tmp -o open3A.zip \
+# unzip the app into workfolder
     && unzip /tmp/open3A.zip -d /var/www/html \
+# set proper accessrights and create nedded folder
     && chmod 777 /var/www/html/specifics \
     && chmod 777 /var/www/html/system/Backup \
     && mkdir /var/www/html/system/session \
