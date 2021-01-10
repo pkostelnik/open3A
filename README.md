@@ -2,7 +2,8 @@
 Based on release 3.3 from:
 https://www.open3a.de/
 
-build on caddyserver container: php:7-fpm-alpine
+## built on alpine with nginx and php-fpm7 container: alpine:latest
+*thanks, kudos and regards to trafix for his KISS based Dockerimage*
 
 first git clone this repo thenafter
 
@@ -19,4 +20,4 @@ User: open3a
 Password: open3a
 Database: open3a
 
-#*Have fun with this small and simple setup of open3a in docker!
+*Have fun with this small and simple setup of open3a in docker!*
