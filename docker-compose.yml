@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   web:
-    image: open3a:nginx
+    image: pkostelnik/open3a
     restart: unless-stopped
 #    volumes:
     environment:
