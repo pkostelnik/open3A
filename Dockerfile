@@ -1,25 +1,62 @@
-FROM php:7-fpm-alpine
+FROM alpine:latest
 
-LABEL MAINTAINER='Pawel Kostelnik <pkostelnik@snat.tech>'
+LABEL MAINTAINER='Pawel Kostelnik <pkostelnik@snat.tech>' \
+      Description="Lightweight container with Caddyserver 2.3, PHP-FPM 7.4 and open3A 3.3 based on Alpine Linux."
 
-### Copy entrypoint executable inplace
-# COPY docker-entrypoint /usr/local/bin/docker-entrypoint
+### Copy config files for php-fpm and php inplace
+# Configure PHP-FPM
+#COPY config/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
+COPY config/php.ini /etc/php7/conf.d/custom.ini
+
+# Configure supervisord
+COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# https://github.com/caddyserver/caddy/releases
+ENV CADDY_VERSION v2.3.0
 
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache ca-certificates mailcap nano unzip aria2 \
+    && apk add --no-cache ca-certificates nano unzip aria2 supervisor php7 \
+        php7-mysqli \
+	php7-bcmath \
+        php7-ctype \
+        php7-curl \
+        php7-fpm \
+        php7-gd \
+        php7-iconv \
+        php7-intl \
+        php7-json \
+        php7-mbstring \
+        php7-mcrypt \
+        php7-mysqlnd \
+        php7-opcache \
+        php7-openssl \
+        php7-pdo \
+        php7-pdo_mysql \
+        php7-pdo_pgsql \
+        php7-pdo_sqlite \
+        php7-phar \
+        php7-posix \
+        php7-session \
+        php7-soap \
+        php7-xml \
+        php7-zip \
     && mkdir -p /tmp \
     && aria2c "https://www.open3a.de/download/open3A 3.3.zip" -d /tmp -o open3A.zip \
     && unzip /tmp/open3A.zip -d /srv \
-    && docker-php-ext-install mysqli \
-    && docker-php-ext-configure mysqli \
     && chmod 777 /srv/specifics \
     && chmod 777 /srv/system/Backup \
     && mkdir /srv/system/session \
     && chmod 777 /srv/system/session \
-    && chmod 777 /srv/system/DBData/Installation.pfdb.php
-    
-RUN set -eux; \
+    && chmod 777 /srv/system/DBData/Installation.pfdb.php \
+    # Remove unnecessary services
+    && rm -f /etc/init.d/hwdrivers \
+            /etc/init.d/hwclock \
+            /etc/init.d/hwdrivers \
+            /etc/init.d/modules \
+            /etc/init.d/modules-load \
+            /etc/init.d/modloop \
+    && set -eux; \
 	mkdir -p \
 		/config/caddy \
 		/data/caddy \
@@ -27,12 +64,8 @@ RUN set -eux; \
 		/usr/share/caddy \
 	; \
 	wget -O /etc/caddy/Caddyfile "https://github.com/caddyserver/dist/raw/56302336e0bb7c8c5dff34cbcb1d833791478226/config/Caddyfile"; \
-	wget -O /usr/share/caddy/index.html "https://github.com/caddyserver/dist/raw/56302336e0bb7c8c5dff34cbcb1d833791478226/welcome/index.html"
-
-# https://github.com/caddyserver/caddy/releases
-ENV CADDY_VERSION v2.3.0
-
-RUN set -eux; \
+	wget -O /usr/share/caddy/index.html "https://github.com/caddyserver/dist/raw/56302336e0bb7c8c5dff34cbcb1d833791478226/welcome/index.html" \
+    && set -eux; \
 	apkArch="$(apk --print-arch)"; \
 	case "$apkArch" in \
 		x86_64)  binArch='amd64'; checksum='7112a03bf341a4ccc5332b5ea715de9a68316d2aa2f468bdc263b192448ce412e002acfda68bd0606088b35c5de1f2e93f2aa64ccc065a039f87ee34e0b85b98' ;; \
@@ -48,11 +81,8 @@ RUN set -eux; \
 	tar x -z -f /tmp/caddy.tar.gz -C /usr/bin caddy; \
 	rm -f /tmp/caddy.tar.gz; \
 	chmod +x /usr/bin/caddy; \
-	caddy version
-
-# set up nsswitch.conf for Go's "netgo" implementation
-# - https://github.com/docker-library/golang/blob/1eb096131592bcbc90aa3b97471811c798a93573/1.14/alpine3.12/Dockerfile#L9
-RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
+	caddy version \
+   && [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
 ENV XDG_CONFIG_HOME /config
@@ -80,5 +110,4 @@ EXPOSE 2019
 
 WORKDIR /srv
 
-CMD ["php-fpm", "-D", "-R"]
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "&&", "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf", "&&", "php-fpm7", "-D", "-F"]

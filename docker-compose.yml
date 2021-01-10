@@ -2,23 +2,35 @@ version: "3.7"
 
 services:
   web:
-    image: pkostelnik/open3a:latest
+    image: open3a:nginx
     restart: unless-stopped
 #    volumes:
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: PhaggyK26
+      MYSQL_USER: open3a
+      MYSQL_PASSWORD: open3a
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: open3a
+      MYSQL_HOST: db
     networks:
       - open3a
     ports:
-      - 80:80
+      - 80:8080
 #      - 2019:2019
   db:
     image: mariadb:latest
     restart: unless-stopped
-#    volumes:
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
     environment:
+      MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: PhaggyK26
       MYSQL_USER: open3a
       MYSQL_PASSWORD: open3a
-      
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: open3a
+      MYSQL_HOST: db
     networks:
       - open3a
 #    env_file:
