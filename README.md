@@ -2,7 +2,7 @@
 Based on release 3.3 from:
 https://www.open3a.de/
 
-build on caddyserver container: caddy:3.2
+build on caddyserver container: php:7-fpm-alpine
 
 first git clone this repo thenafter
 
