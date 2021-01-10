@@ -15,6 +15,8 @@ RUN apk update \
     && docker-php-ext-configure mysqli \
     && chmod 777 /srv/specifics \
     && chmod 777 /srv/system/Backup \
+    && mkdir /srv/system/session \
+    && chmod 755 /srv/system/session \
     && chmod 777 /srv/system/DBData/Installation.pfdb.php 
     
 RUN set -eux; \
