@@ -16,9 +16,8 @@ RUN apk update \
     && chmod 777 /srv/specifics \
     && chmod 777 /srv/system/Backup \
     && mkdir /srv/system/session \
-    && chmod 755 /srv/system/session \
-    && chmod 777 /srv/system/DBData/Installation.pfdb.php \
-    && php-fpm -D
+    && chmod 777 /srv/system/session \
+    && chmod 777 /srv/system/DBData/Installation.pfdb.php
     
 RUN set -eux; \
 	mkdir -p \
@@ -81,4 +80,4 @@ EXPOSE 2019
 
 WORKDIR /srv
 
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+CMD ["php-fpm", "-D", "&&", "caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
