@@ -12,8 +12,11 @@ RUN apk update \
     && aria2c "https://www.open3a.de/download/open3A 3.3.zip" -d /tmp -o open3A.zip \
     && unzip /tmp/open3A.zip -d /srv \
     && docker-php-ext-install mysqli \
-    && docker-php-ext-configure mysqli
-
+    && docker-php-ext-configure mysqli \
+    && chmod 777 /srv/specifics \
+    && chmod 777 /srv/system/Backup \
+    && chmod 777 /srv/system/DBData/Installation.pfdb.php 
+    
 RUN set -eux; \
 	mkdir -p \
 		/config/caddy \
